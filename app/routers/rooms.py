@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends
+from uuid import UUID
 
 from app.dependencies import get_room_service, get_current_user
 from app.models.user import User
@@ -27,7 +28,7 @@ async def list_rooms(
 
 @router.get("/{room_id}", response_model=RoomRead)
 async def get_room(
-    room_id: int,
+    room_id: UUID,
     service: RoomService = Depends(get_room_service),
     _: User = Depends(get_current_user),
 ):

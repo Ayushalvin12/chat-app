@@ -1,4 +1,5 @@
 from sqlalchemy.ext.asyncio import AsyncSession
+from uuid import UUID
 
 from app.core.exceptions import RoomAlreadyExistsError, RoomNotFoundError
 from app.models.room import Room
@@ -23,7 +24,7 @@ class RoomService:
     async def get_all_rooms(self) -> list[Room]:
         return await self.room_repo.get_all()
 
-    async def get_room(self, room_id: int) -> Room:
+    async def get_room(self, room_id: UUID) -> Room:
         room = await self.room_repo.get_by_id(room_id)
         if not room:
             raise RoomNotFoundError()

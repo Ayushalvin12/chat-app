@@ -1,5 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
+from uuid import UUID
+
 from app.models.room import Room
 
 
@@ -11,7 +13,7 @@ class RoomRepository:
         result = await self.db.execute(select(Room).order_by(Room.created_at))
         return list(result.scalars().all())
 
-    async def get_by_id(self, room_id: int) -> Room | None:
+    async def get_by_id(self, room_id: UUID) -> Room | None:
         result = await self.db.execute(select(Room).where(Room.id == room_id))
         return result.scalar_one_or_none()
 

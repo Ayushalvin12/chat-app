@@ -1,4 +1,7 @@
+from datetime import datetime
+
 from fastapi import APIRouter, Depends, Query
+from uuid import UUID
 
 from app.dependencies import get_message_service, get_current_user
 from app.models.user import User
@@ -10,8 +13,11 @@ router = APIRouter(prefix="/messages", tags=["messages"])
 
 @router.get("/{room_id}", response_model=list[MessageRead])
 async def get_messages(
-    room_id: int,
-    cursor: int | None = Query(None),
+    room_id: UUID,
+    cursor: datetime | None = Query(
+        None,
+        description="created_at of the oldest message you received — fetch messages older than this",
+    ),
     limit: int = Query(50, le=100),
     service: MessageService = Depends(get_message_service),
     _: User = Depends(get_current_user),
@@ -19,10 +25,10 @@ async def get_messages(
     messages = await service.get_recent(room_id, limit, cursor)
     return [
         MessageRead(
-            id=m.id,
+            id=str(m.id),
             content=m.content,
-            user_id=m.user_id,
-            room_id=m.room_id,
+            user_id=str(m.user_id),
+            room_id=str(m.room_id),
             created_at=m.created_at,
             username=m.author.username if m.author else None,
         )

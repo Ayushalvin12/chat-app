@@ -1,14 +1,11 @@
 from datetime import datetime
-from uuid import UUID
 from pydantic import BaseModel
 
 
 class MessageRead(BaseModel):
-    id: UUID
+    id: str
     content: str
-    user_id: int
-    room_id: int
+    user_id: str
+    room_id: str
     created_at: datetime
     username: str | None = None
-
-    model_config = {"from_attributes": True}

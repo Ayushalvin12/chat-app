@@ -1,4 +1,5 @@
 import json
+from uuid import UUID
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect, Query
 
 from app.database import AsyncSessionLocal
@@ -23,7 +24,7 @@ async def _authenticate(token: str):
 
 
 @router.websocket("/ws/{room_id}")
-async def websocket_endpoint(room_id: int, ws: WebSocket, token: str = Query(...)):
+async def websocket_endpoint(room_id: UUID, ws: WebSocket, token: str = Query(...)):
     user = await _authenticate(token)
     if not user:
         await ws.close(code=1008)
@@ -37,14 +38,16 @@ async def websocket_endpoint(room_id: int, ws: WebSocket, token: str = Query(...
         messages = await service.get_recent(room_id)
 
     history = [
-        MessageRead(
-            id=m.id,
-            content=m.content,
-            user_id=m.user_id,
-            room_id=m.room_id,
-            created_at=m.created_at,
-            username=m.author.username if m.author else None,
-        ).model_dump(mode="json")
+        {
+            **MessageRead(
+                id=str(m.id),
+                content=m.content,
+                user_id=str(m.user_id),
+                room_id=str(m.room_id),
+                created_at=m.created_at,
+                username=m.author.username if m.author else None,
+            ).model_dump(mode="json")
+        }
         for m in messages
     ]
     await ws.send_text(json.dumps({"type": "history", "messages": history}))
@@ -67,11 +70,11 @@ async def websocket_endpoint(room_id: int, ws: WebSocket, token: str = Query(...
                 json.dumps(
                     {
                         "type": "message",
-                        "id": msg.id,
+                        "id": str(msg.id),
                         "content": msg.content,
-                        "user_id": msg.user_id,
+                        "user_id": str(msg.user_id),
                         "username": user.username,
-                        "room_id": room_id,
+                        "room_id": str(room_id),
                         "created_at": msg.created_at.isoformat(),
                     }
                 ),
