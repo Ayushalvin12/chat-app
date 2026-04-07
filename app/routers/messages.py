@@ -11,7 +11,16 @@ from app.services.message_service import MessageService
 router = APIRouter(prefix="/messages", tags=["messages"])
 
 
-@router.get("/{room_id}", response_model=list[MessageRead])
+@router.get(
+    "/{room_id}",
+    response_model=list[MessageRead],
+    summary="Get messages in a room",
+    description=(
+        "Retrieve messages for a specific chat room using cursor-based pagination. "
+        "Provide a `cursor` (timestamp of the oldest message received) to fetch older messages. "
+        "Messages are returned in descending order of creation time."
+    ),
+)
 async def get_messages(
     room_id: UUID,
     cursor: datetime | None = Query(

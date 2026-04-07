@@ -16,6 +16,12 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="Chat App", lifespan=lifespan)
 
+
+@app.get("/")
+async def root():
+    return {"status": "ok", "message": "Chat App is running "}
+
+
 app.include_router(auth.router)
 app.include_router(rooms.router)
 app.include_router(messages.router)
