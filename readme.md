@@ -15,8 +15,6 @@ A real-time chat application built with **FastAPI**, featuring **JWT authenticat
 
 ---
 
----
-
 ## Environment & Setup
 
 ### 1. Create Virtual Environment
@@ -120,12 +118,28 @@ Reusable dependency to:
 
 ##  API Testing (Postman)
 
+### Database Schema
+![Database](app/screenshots/db_schema.png)
+
+### Signup Endpoint
 ![Signup Screenshot](app/screenshots/signup.png)
+
+### Login Endpoint
 ![Login Screenshot](app/screenshots/login.png)
+
+### Create Room
 ![Create Room](app/screenshots/create_room.png)
+
+### WebSocket Chat 1
 ![WebSocket Screenshot](app/screenshots/websocket1.png)
+
+### WebSocket Chat 2
 ![WebSocket Screenshot](app/screenshots/websocket2.png)
+
+### Get Messages
 ![Get Messages](app/screenshots/get_messages.png)
+
+### Get Messages with Cursor
 ![Get Messages with cursor](app/screenshots/get_messages_with_cursor.png)
 
 
